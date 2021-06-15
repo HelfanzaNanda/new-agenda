@@ -3,49 +3,108 @@
 namespace App\Http\Controllers\Agenda;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Agenda\CreateRequest;
+use App\Http\Requests\Agenda\UpdateRequest;
 use App\Models\Agenda;
 use App\Traits\ConvertDate;
 use App\Traits\UploadFile;
+use App\User;
 use Illuminate\Http\Request;
 
 class AgendaController extends Controller
 {
 	use ConvertDate, UploadFile;
-    public function index()
+    
+	public function index()
 	{
 		return view('agenda.index');
 	}
 
-	public function get($id)
+	public function create()
+	{
+		$users = User::where('is_login', true)->get();
+		return view('agenda.create', [
+			'users' => $users
+		]);
+	}
+
+	public function edit($id)
 	{
 		$agenda = Agenda::whereId($id)->first();
-		$agenda['daterange'] = $agenda->start_date->format('m/d/Y') . ' - ' . $agenda->end_date->format('m/d/Y');
+		$agenda['daterange'] = $agenda->tanggal_mulai->format('m/d/Y') . ' - ' . $agenda->tanggal_selesai->format('m/d/Y');
+		$users = User::where('is_login', true)->get();
+		return view('agenda.edit', [
+			'users' => $users,
+			'agenda' => $agenda
+		]);
+	}
+
+	public function detail($id)
+	{
+		$agenda = Agenda::with('documentations', 'user')->whereId($id)->first();
+		$agenda['daterange'] = $agenda->tanggal_mulai->format('m/d/Y') . ' - ' . $agenda->tanggal_selesai->format('m/d/Y');
 		return $agenda;
 	}
 
-	public function createOrUpdate(Request $request)
+	public function store(CreateRequest $request)
 	{
-		$request->validate([
-			'date_range' => 'required',
-			'start_time' => 'required',
-			'end_time' => 'required',
-			'name' => 'required',
-			'place' => 'required',
-			'executor' => 'required',
-			//'file' => 'required'
-		]);
-
-		if($request->id){
-			$agenda = Agenda::whereId($request->id)->first();
+		$params = $request->except(['date_range', 'dokumentasi', 'pelaksana', 'absen']);
+		if($params['jam_selesai'] == 'Selesai'){
+			$params['jam_selesai'] = null;
 		}
-		$params = $request->except('date_range');
-		$params['start_date'] = $this->convertDate(substr($request->date_range, 0, 10));
-		$params['end_date'] = $this->convertDate(substr($request->date_range, 13));
-		$params['file'] = $request->file('file') ? $this->uploadFile($request->file('file'), 'agendas') : $agenda->file;
-		Agenda::updateOrCreate(['id' => $request->id], $params);
+		$params['pelaksana_kegiatan'] = $request->pelaksana;
+		$params['tanggal_mulai'] = $this->convertDate(substr($request->date_range, 0, 10));
+		$params['tanggal_selesai'] = $this->convertDate(substr($request->date_range, 13));
+		$params['undangan'] = $this->uploadFile($request->file('undangan'), 'agendas');
+		$params['materi'] = $this->uploadFile($request->file('materi'), 'agendas');
+		$params['daftar_hadir'] = $this->uploadFile($request->file('absen'), 'agendas');
+		$params['notulen'] = $this->uploadFile($request->file('notulen'), 'agendas');
+		$agenda = Agenda::create($params);
+		
+		foreach($request->dokumentasi as $doc){
+			$agenda->documentations()->create([
+				'dokumentasi' => $this->uploadFile($doc, 'agendas')
+			]);
+		}
+		
 
 		return response()->json([
 			'message' => 'berhasil menambahkan data'
+		]);
+	}
+
+	public function update(UpdateRequest $request, $id)
+	{
+		$params = $request->except(['date_range', 'dokumentasi', 'pelaksana', 'absen']);
+		if($params['jam_selesai'] && $params['jam_selesai'] == 'Selesai'){
+			$params['jam_selesai'] = null;
+		}
+		$agenda = Agenda::whereId($id)->first();
+		$agenda->update([
+			'pelaksana_kegiatan' => $request->pelaksana ?? $agenda->pelaksana_kegiatan,
+			'jam_mulai' => $request->jam_mulai ?? $agenda->jam_mulai,
+			'jam_selesai' => $request->jam_selesai ?? $agenda->jam_selesai,
+			'kegiatan' => $request->kegiatan ?? $agenda->kegiatan,
+			'tempat' => $request->tempat ?? $agenda->tempat,
+			'disposisi' => $request->disposisi ?? $agenda->disposisi,
+			'undangan' => $request->file('undangan') ? $this->uploadFile($request->file('undangan'), 'agendas') : $agenda->undangan,
+			'materi' => $request->file('materi') ? $this->uploadFile($request->file('materi'), 'agendas') : $agenda->materi,
+			'daftar_hadir' => $request->file('absen') ? $this->uploadFile($request->file('absen'), 'agendas') : $agenda->daftar_hadir,
+			'notulen' => $request->file('notulen') ? $this->uploadFile($request->file('notulen'), 'agendas') : $agenda->notulen,
+		]);
+		
+		if($request->dokumentasi){
+			$agenda->documentations()->delete();
+			foreach($request->dokumentasi as $doc){
+				$agenda->documentations()->create([
+					'dokumentasi' => $this->uploadFile($doc, 'agendas')
+				]);
+			}
+		}
+		
+
+		return response()->json([
+			'message' => 'berhasil update data'
 		]);
 	}
 
@@ -55,13 +114,33 @@ class AgendaController extends Controller
         $datatables = datatables($agendas)
 		->addIndexColumn()
 		->addColumn('h/t', function($row){
-			return $row->start_date->translatedFormat('d F Y') . ' - ' . $row->end_date->translatedFormat('d F Y');
+			return $row->tanggal_mulai->translatedFormat('d F Y') . ' - ' . $row->tanggal_selesai->translatedFormat('d F Y');
 		})
-		->addColumn('time', function($row){
-			return $row->start_time . ' - ' . $row->end_time;
+		->addColumn('disposisi', function($row){
+			return $row->user->name;
+		})
+		->addColumn('status', function($row){
+			return 'status';
+		})
+		->addColumn('jam', function($row){
+			return $row->jam_mulai . ' - ' . ($row->jam_selesai ?? 'Selesai');
 		})
         ->addColumn('_buttons', function($row){
-            $btn = '<a data-id="'.$row->id.'" class="btn-edit btn btn-sm btn-warning mr-2"><i class="fa fa-edit"></i></a>';
+			$btn = '';
+			$btn .= '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
+			$btn .= ' ' . csrf_field().' ';
+			$btn .= '	<input type="hidden" value="'.$row->undangan.'" name="file">';
+			$btn .= '	<button class="btn btn-primary text-white">Download Undangan</button>';
+			$btn .= '</form>';
+			
+			$btn .= '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
+			$btn .= ' ' . csrf_field().' ';
+			$btn .= '	<input type="hidden" value="'.$row->materi.'" name="file">';
+			$btn .= '	<button class="btn btn-primary text-white">Download Materi</button>';
+			$btn .= '</form>';
+
+            $btn .= '<a data-id="'.$row->id.'"  class="btn-detail btn btn-sm btn-primary text-white mr-2">Detail</i></a>';
+            $btn .= '<a  href="'.route('agenda.edit', $row->id).'" class="btn-edit btn btn-sm btn-warning mr-2"><i class="fa fa-edit"></i></a>';
             $btn .= '<a data-id="'.$row->id.'" class="btn-delete btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>';
             return $btn;
         })
@@ -71,11 +150,17 @@ class AgendaController extends Controller
 
 	public function delete($id)
 	{
-		$user = Agenda::whereId($id)->first();
-		$user->delete();
+		$agenda = Agenda::whereId($id)->first();
+		$agenda->delete();
 
 		return response()->json([
 			'message' => 'berhasil delete data'
 		]);
+	}
+
+	public function download(Request $request)
+	{
+		$file = $request->file;
+		return response()->download($file);
 	}
 }

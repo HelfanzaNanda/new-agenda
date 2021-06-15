@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@push('styles')
+	<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+@endpush
 @section('content')
 <div class="app-page-title">
 	<div class="page-title-wrapper">
@@ -14,9 +16,9 @@
 			</div>
 		</div>
 		<div class="page-title-actions">
-			<button type="button" class="btn-add btn-shadow mr-3 btn btn-primary">
+			<a href="{{ route('agenda.create') }}" class="btn-shadow mr-3 btn btn-primary">
 				Tambah Agenda
-			</button>
+			</a>
 		</div>    
 	</div>
 </div>            
@@ -24,14 +26,14 @@
 	<div class="col-md-12">
 		<div class="main-card mb-3 card">
 			<div class="card-body">
-				@include('components.datatables-default',[
+				@include('components.datatables-expandable',[
 					'url' => route('agenda.datatables'),
 					'columns'=> [
 						'h/t'	=> '<th>H/T</th>',
-						'name'	=> '<th >Kegiatan</th>',
-						'executor'	=> '<th>Pelaksana Kegiatan</th>',
-						'time'	=> '<th>Jam</th>',
-						'place'	=> '<th>Tempat</th>',
+						'kegiatan'	=> '<th >Kegiatan</th>',
+						'pelaksana_kegiatan'	=> '<th>Pelaksana Kegiatan</th>',
+						'disposisi'	=> '<th>Disposisi</th>',
+						'status'	=> '<th>Status</th>',
 						'_buttons'=> '<th>Action</th>',
 					],
 				])
@@ -46,94 +48,45 @@
 @endsection
 
 @push('scripts')
+	<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+	<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
+
 	<script>
-		$(document).ready(function () {  
-			$('.daterange').daterangepicker({
-				minDate: new Date()
-			});
-			$('.timepicker').timepicker({
-				timeFormat: 'HH:mm',
-				interval: 60,
-				minTime: '08:00',
-				maxTime: '16:00',
-				defaultTime: '08:00',
-				startTime: '08:00',
-				dynamic: false,
-				dropdown: true,
-				scrollbar: true
-			});
-		})
 
-
-		$(document).on('click', '.btn-add', function (e) {  
-			e.preventDefault()
-			resetForm()
-			resetError()
-			$('.modal-title').text('Tambah Agenda')
-			$('#modal-agenda').modal('show')
-		})
-
-		$(document).on('change', '#check-end-time', function (e) {  
-			e.preventDefault()
-			const isChecked =$(this).is(':checked')
-			if(isChecked){
-				$('#input-end-time').val('Selesai')
-				$('#input-end-time').attr('readonly', 'readonly');
-			}else{
-				$('#input-end-time').val('')
-				$('#input-end-time').removeAttr('readonly');
-			}
-		})
-
-		const resetForm = () => {
-			$('#input-id').val('')
-			$('#input-date-range').val('')
-			$('#input-start-time').val('')
-			$('#input-end-time').val('')
-			$('#input-name').val('')
-			$('#input-place').val('')
-			$('#input-executor').val('')
-			$('#input-file').val('')
-		}
-
-		const resetError = () => {
-			$('#error-date_range').val('')
-			$('#error-start_time').val('')
-			$('#error-end_time').val('')
-			$('#error-name').val('')
-			$('#error-place').val('')
-			$('#error-executor').val('')
-			$('#error-file').val('')
-		}
-
-		$(document).on('click', '.btn-edit', async function (e) {  
+		$(document).on('click', '.btn-detail', async function (e) {  
 			e.preventDefault()
 			const id = $(this).data('id')
-			const url = "{{ route('agenda.get', '') }}"+"/"+id
-			resetError()
+			const url= "{{ route('agenda.detail', '') }}"+"/"+id 
+			
 			try {
-				const response = await axios.get(url)
-				$('#input-id').val(response.data.id)
-				$('#input-date-range').daterangepicker('setDate', response.data.daterange)
-				$('#input-start-time').val(response.data.start_time)
-				if(response.data.end_time === 'Selesai'){
-					$('#input-end-time').attr('readonly', 'readonly')
-					$('#check-end-time').prop('checked', true);
-				}else{
-					$('#input-end-time').removeAttr('readonly')
-					$('#check-end-time').prop('checked', false)
-				}
-				$('#input-end-time').val(response.data.end_time)
-				$('#input-name').val(response.data.name)
-				$('#input-place').val(response.data.place)
-				$('#input-executor').val(response.data.executor)
-				$('.modal-title').text('Edit Agenda')
+				let response = await axios.get(url)
+				console.log(response.data);
+				$('.modal-title').text('Detail Agenda')
+				$('.text-daterange').text(response.data.daterange)
+				$('.text-jam-mulai').text(response.data.jam_mulai)
+				$('.text-jam-selesai').text(response.data.jam_selesai)
+				$('.text-kegiatan').text(response.data.kegiatan)
+				$('.text-tempat').text(response.data.tempat)
+				$('.text-pelaksana-kegiatan').text(response.data.pelaksana_kegiatan)
+				$('.text-disposisi').text(response.data.user.name)
+				$('.img-undangan').attr('src', response.data.undangan)
+				$('.img-materi').attr('src', response.data.materi)
+				$('.img-absen').attr('src', response.data.daftar_hadir)
+				$('.img-notulen').attr('src', response.data.notulen)
+
+				let div = ''
+				$.each(response.data.documentations, function (index, value) {  
+					console.log(value);
+					div += '<img src="'+value.dokumentasi+'" class="mb-2 img-notulen-'+index+'" width="100" height="100"'
+					div +=	'style="object-fit: cover; object-position: center">'
+				})
+				$('.docs').append(div)
 				$('#modal-agenda').modal('show')
 			} catch (error) {
-				console.log(error);
+				
 			}
+			
 		})
-
 		$(document).on('click', '.btn-delete', function (e) {  
 			e.preventDefault()
 			const id = $(this).data('id')
@@ -141,25 +94,5 @@
 			deleteData(url, null, true)
 		})
 
-		$(document).on('click', '.btn-save', async function (e) {  
-			e.preventDefault()
-			setLoading(e)
-			const form = new FormData( $('#form-agenda')[0] )
-			const url = "{{ route('agenda.createorupdate') }}"
-			try {
-				const response = await axios.post(url, form)
-				resetForm()
-				hideLoading(e, "Save")
-				$('#modal-agenda').modal('hide')
-				$('#datatable').DataTable().ajax.reload()
-				toastr["success"](response.data.message, "success")
-			} catch (error) {
-				hideLoading(e, "Save")
-				if(error.response.status === 422){
-					const errors = error.response.data.errors
-					Object.keys(errors).map(field => $('#error-'+field).text(errors[field][0]))	
-				}	
-			}
-		})
 	</script>
 @endpush
