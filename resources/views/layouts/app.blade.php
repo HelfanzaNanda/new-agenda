@@ -14,7 +14,7 @@
 @section('body')
 <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
 	@include('layouts.partials._navbar')
-	@include('layouts.partials._ui-theme-setting')    
+	{{-- @include('layouts.partials._ui-theme-setting')     --}}
 	<div class="app-main">
 			    		
 		@include('layouts.partials._sidebar')

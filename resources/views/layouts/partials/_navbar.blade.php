@@ -1,6 +1,8 @@
 <div class="app-header header-shadow">
 	<div class="app-header__logo">
-		<div class="logo-src"></div>
+		<div >
+			<img src="{{ asset('images/bnpp.png') }}" alt="" style="height: 40px;">
+		</div>
 		<div class="header__pane ml-auto">
 			<div>
 				<button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
@@ -60,11 +62,11 @@
 			</ul>        
 		</div> --}}
 		<div class="app-header-right">
-			<ul class="header-menu nav mr-3">
+			{{-- <ul class="header-menu nav mr-3">
 				<li class="nav-item">
 					Welcome <strong>{{ auth()->user()->name }}</strong>
 				</li>
-			</ul>
+			</ul> --}}
 			<div class="header-btn-lg pr-0">
 				<div class="widget-content p-0">
 					<div class="widget-content-wrapper">
@@ -88,17 +90,17 @@
 						</div>
 						<div class="widget-content-left  ml-3 header-user-info">
 							<div class="widget-heading">
-								Alina Mclourd
+								{{ auth()->user()->name }}
 							</div>
 							<div class="widget-subheading">
-								VP People Manager
+								{{ auth()->user()->getRoleNames()[0] }}
 							</div>
 						</div>
-						<div class="widget-content-right header-user-info ml-3">
+						{{-- <div class="widget-content-right header-user-info ml-3">
 							<button type="button" class="btn-shadow p-1 btn btn-primary btn-sm show-toastr-example">
 								<i class="fa text-white fa-calendar pr-1 pl-1"></i>
 							</button>
-						</div>
+						</div> --}}
 					</div>
 				</div>
 			</div>        

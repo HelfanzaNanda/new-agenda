@@ -34,21 +34,21 @@
 				<li class="app-sidebar__heading">Dashboard</li>
 				<li>
 					<a href="index.html" class="{{ request()->is('/') ? 'mm-active' : '' }}">
-						<i class="metismenu-icon pe-7s-rocket"></i>
+						<i class="metismenu-icon fas fa-home"></i>
 						Dashboard
 					</a>
 				</li>
 				<li class="app-sidebar__heading">Users</li>
 				<li>
 					<a href="{{ route('user.index') }}" class="{{ request()->is('users') ? 'mm-active' : '' }}">
-						<i class="metismenu-icon pe-7s-display2"></i>
+						<i class="metismenu-icon fas fa-users"></i>
 						Users
 					</a>
 				</li>
 				<li class="app-sidebar__heading">Agenda</li>
 				<li>
 					<a href="{{ route('agenda.index') }}" class="{{ request()->is('agenda') ? 'mm-active' : '' }}">
-						<i class="metismenu-icon pe-7s-display2"></i>
+						<i class="metismenu-icon fas fa-calendar"></i>
 						Agenda
 					</a>
 				</li>
