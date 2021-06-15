@@ -30,7 +30,7 @@
 		</span>
 	</div>    
 	<div class="app-header__content">
-		<div class="app-header-left">
+		{{-- <div class="app-header-left">
 			<div class="search-wrapper">
 				<div class="input-holder">
 					<input type="text" class="search-input" placeholder="Type to search">
@@ -57,22 +57,26 @@
 						Settings
 					</a>
 				</li>
-			</ul>        </div>
+			</ul>        
+		</div> --}}
 		<div class="app-header-right">
+			<ul class="header-menu nav mr-3">
+				<li class="nav-item">
+					Welcome <strong>{{ auth()->user()->name }}</strong>
+				</li>
+			</ul>
 			<div class="header-btn-lg pr-0">
 				<div class="widget-content p-0">
 					<div class="widget-content-wrapper">
 						<div class="widget-content-left">
+							
 							<div class="btn-group">
 								<a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
 									<img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">
 									<i class="fa fa-angle-down ml-2 opacity-8"></i>
 								</a>
 								<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-									<button type="button" tabindex="0" class="dropdown-item">User Account</button>
 									<a href="{{ route('update.password') }}" tabindex="0" class="dropdown-item">Update Password</a>
-									<h6 tabindex="-1" class="dropdown-header">Header</h6>
-									<button type="button" tabindex="0" class="dropdown-item">Actions</button>
 									<div tabindex="-1" class="dropdown-divider"></div>
 									<button type="button" tabindex="0" class="dropdown-item"
 									onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</button>

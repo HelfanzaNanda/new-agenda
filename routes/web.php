@@ -15,6 +15,21 @@ Route::middleware('auth')->group(function(){
 	Route::get('update-password', 'User\UpdatePasswordController@index')->name('update.password');
 	Route::post('update-password', 'User\UpdatePasswordController@update');
 
+	Route::prefix('users')->group(function(){
+		Route::get('', 'User\UserController@index')->name('user.index');
+		Route::post('/datatables', 'User\UserController@datatables')->name('user.datatables');
+		Route::post('store', 'User\UserController@createOrUpdate')->name('user.createorupdate');
+		Route::delete('delete/{id}', 'User\UserController@delete')->name('user.delete');
+		Route::get('{id}', 'User\UserController@get')->name('user.get');
+	});
+
+	Route::prefix('agenda')->group(function(){
+		Route::get('', 'Agenda\AgendaController@index')->name('agenda.index');
+		Route::post('/datatables', 'Agenda\AgendaController@datatables')->name('agenda.datatables');
+		Route::post('store', 'Agenda\AgendaController@createOrUpdate')->name('agenda.createorupdate');
+		Route::delete('delete/{id}', 'Agenda\AgendaController@delete')->name('agenda.delete');
+		Route::get('{id}', 'Agenda\AgendaController@get')->name('agenda.get');
+	});
 
 
 	Route::view('/', 'dashboard.index');

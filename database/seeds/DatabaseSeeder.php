@@ -12,8 +12,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
-		factory(User::class, 3)->create();
-        // $this->call(UserSeeder::class);
+		$this->call([
+			RoleSeeder::class,
+			UserSeeder::class
+		]);
     }
 }
