@@ -53,7 +53,7 @@ class LoginController extends Controller
 			auth()->user()->update([
 				'is_login' => true
 			]);
-			return redirect()->route('dashboard');
+			return redirect()->route('dashboard.index');
 		}else{
 			throw ValidationException::withMessages([
 				$this->username() => [trans('auth.failed')],

@@ -25,6 +25,12 @@
 				"type": "POST",
 				"data":function(d) {
 					d._token = "{{csrf_token()}}"
+					@if($filters)
+						@foreach($filters as $filter)
+							d.filter = "{{ $filter }}"
+						@endforeach
+					@endif
+					
 				}
 			},
 			"columns": [

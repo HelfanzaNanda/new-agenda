@@ -15,7 +15,8 @@ Route::middleware('auth')->group(function(){
 	Route::get('update-password', 'User\UpdatePasswordController@index')->name('update.password');
 	Route::post('update-password', 'User\UpdatePasswordController@update');
 
-	Route::view('/', 'dashboard.index')->name('dashboard');
+	Route::get('/', 'Dashboard\DashboardController@index')->name('dashboard.index');
+	Route::post('/', 'Dashboard\DashboardController@datatables')->name('dashboard.datatables');
 
 	Route::prefix('users')->group(function(){
 		Route::get('', 'User\UserController@index')->name('user.index');
