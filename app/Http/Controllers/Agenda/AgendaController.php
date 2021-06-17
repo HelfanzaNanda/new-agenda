@@ -27,6 +27,7 @@ class AgendaController extends Controller
 	{
 		//$users = User::with('roles')->where('is_login', true)->get();
 		$users = $this->getDisposisi();
+		//dd($users);
 		return view('agenda.create', [
 			'users' => $users
 		]);

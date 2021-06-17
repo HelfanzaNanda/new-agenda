@@ -76,12 +76,12 @@
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="disposisi">Disposisi</label>
-								<select name="disposisi" id="input-disposisi" class="form-control">
+								<select name="disposisi" id="input-disposisi" class="form-control select-single">
 									<option value="" selected disabled>Pilih Disposisi</option>
 									@foreach ($users as $user)
 										<option 
 										{{ $user->id == $agenda->disposisi ? 'selected' : '' }}
-										value="{{ $user->id }}">{{ $user->name .' - '. $user->getRoleNames()[0] }}</option>
+										value="{{ $user->id }}">{{ $user->name .' - '. ($user->roles()->count() ? $user->getRoleNames()[0] : '') }}</option>
 									@endforeach
 								</select>
 								<x-validation-error id="error-disposisi"/>
