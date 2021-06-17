@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="app-page-title">
+<div class="app-page-title" style="margin-bottom: 0">
 	<div class="page-title-wrapper">
 		<div class="page-title-heading">
 			<div class="page-title-icon">
-				<i class="pe-7s-drawer icon-gradient bg-happy-itmeo">
+				<i class="metismenu-icon fas fa-users icon-gradient bg-happy-itmeo">
 				</i>
 			</div>
 			<div>Users

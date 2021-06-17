@@ -17,22 +17,17 @@ class DashboardController extends Controller
 	{
 		$now = Carbon::now();
 		$period = CarbonPeriod::create($now->translatedFormat('Y-m-d'), $now->addDays(7)->translatedFormat('Y-m-d'));
-		$dates = [];
+		$results = [];
 		foreach($period as $date){
-			array_push($dates, $date->translatedFormat('d F Y'));
+			$count = Agenda::whereDate('tanggal_mulai', $date->format('Y-m-d'))->count();
+			$item = [
+				'count' => $count,
+				'date' => $date->translatedFormat('d F Y')
+			];
+			array_push($results, $item);
 		}
-		$columns = [
-			'file_materi'	=> '<th>File Materi</th>',
-			'file_undangan'	=> '<th>File Undangan</th>',
-			'jam'	=> '<th>Jam</th>',
-			'kegiatan'	=> '<th>Agenda</th>',
-			'tempat'	=> '<th>Tempat</th>',
-			'pelaksana_kegiatan'	=> '<th>Pelaksana</th>',
-			'status'	=> '<th>Status</th>'
-		];
 		return view('dashboard.index', [
-			'dates' => $dates,
-			'columns' => $columns
+			'results' => $results,
 		]);
 	}
 
@@ -42,28 +37,39 @@ class DashboardController extends Controller
         $datatables = datatables($users)
 		->addIndexColumn()
 		->addColumn('file_materi', function($row){
-			$btn = '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
-			$btn .= ' ' . csrf_field().' ';
-			$btn .= '	<input type="hidden" value="'.$row->materi.'" name="file">';
-			$btn .= '	<button class="btn btn-primary btn-sm text-white">Download</button>';
-			$btn .= '</form>';
+			if($row->materi){
+				$btn = '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
+				$btn .= ' ' . csrf_field().' ';
+				$btn .= '	<input type="hidden" value="'.$row->materi.'" name="file">';
+				$btn .= '	<button class="btn btn-primary btn-sm text-white">Download</button>';
+				$btn .= '</form>';
+			}else{
+				$btn = '-';
+			}
 			return $btn;
 		})
 
 		->addColumn('file_undangan', function($row){
-			$btn = '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
-			$btn .= ' ' . csrf_field().' ';
-			$btn .= '	<input type="hidden" value="'.$row->undangan.'" name="file">';
-			$btn .= '	<button class="btn btn-primary btn-sm text-white">Download</button>';
-			$btn .= '</form>';
+			if($row->undangan){
+				$btn = '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
+				$btn .= ' ' . csrf_field().' ';
+				$btn .= '	<input type="hidden" value="'.$row->undangan.'" name="file">';
+				$btn .= '	<button class="btn btn-primary btn-sm text-white">Download</button>';
+				$btn .= '</form>';
+			}else{
+				$btn = '-';
+			}
 			return $btn;
 		})
 		
 		->addColumn('status', function($row){
-			return 'status';
+			return $row->absens()->count() ? '<i class="fas fa-notification></i>' : '-';
 		})
 		->addColumn('jam', function($row){
-			return $row->jam_mulai . ' - ' . ($row->jam_selesai ?? 'Selesai');
+			return Carbon::parse($row->jam_mulai)->format('H:i') . ' - ' . $row->jam_selesai ?? 'Selesai';
+		})
+		->addColumn('disposisi', function($row){
+			return $row->user->name;
 		})
 		->rawColumns(['file_materi', 'file_undangan']);
         return $datatables->toJson();

@@ -3,11 +3,11 @@
 	<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
 @endpush
 @section('content')
-<div class="app-page-title">
+<div class="app-page-title" style="margin-bottom: 0">
 	<div class="page-title-wrapper">
 		<div class="page-title-heading">
 			<div class="page-title-icon">
-				<i class="pe-7s-drawer icon-gradient bg-happy-itmeo">
+				<i class="metismenu-icon fas fa-calendar icon-gradient bg-happy-itmeo">
 				</i>
 			</div>
 			<div>Agenda
@@ -34,6 +34,8 @@
 						'pelaksana_kegiatan'	=> '<th>Pelaksana Kegiatan</th>',
 						'disposisi'	=> '<th>Disposisi</th>',
 						'status'	=> '<th>Status</th>',
+						'file_materi'	=> '<th>File Materi</th>',
+						'file_undangan'	=> '<th>File Undangan</th>',
 						'_buttons'=> '<th>Action</th>',
 					],
 				])
@@ -69,10 +71,30 @@
 				$('.text-tempat').text(response.data.tempat)
 				$('.text-pelaksana-kegiatan').text(response.data.pelaksana_kegiatan)
 				$('.text-disposisi').text(response.data.user.name)
-				$('.img-undangan').attr('src', response.data.undangan)
-				$('.img-materi').attr('src', response.data.materi)
-				$('.img-absen').attr('src', response.data.daftar_hadir)
-				$('.img-notulen').attr('src', response.data.notulen)
+				if(response.data.undangan){
+					$('.img-undangan').attr('src', response.data.undangan)
+					$('.img-undangan').show()
+				}else{
+					$('.img-undangan').hide()
+				}
+				if(response.data.materi){
+					$('.img-materi').attr('src', response.data.materi)
+					$('.img-materi').show()
+				}else{
+					$('.img-materi').hide()
+				}
+				if(response.data.daftar_hadir){
+					$('.img-absen').attr('src', response.data.daftar_hadir)
+					$('.img-absen').show()
+				}else{
+					$('.img-absen').hide()
+				}
+				if(response.data.notulen){
+					$('.img-notulen').attr('src', response.data.notulen)
+					$('.img-notulen').show()
+				}else{
+					$('.img-notulen').hide()
+				}
 
 				let div = ''
 				$.each(response.data.documentations, function (index, value) {  

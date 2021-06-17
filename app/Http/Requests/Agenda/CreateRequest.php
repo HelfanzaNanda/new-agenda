@@ -31,11 +31,12 @@ class CreateRequest extends FormRequest
 			'tempat' => 'required',
 			'pelaksana' => 'required',
 			'disposisi' => 'required',
-			'undangan' => 'required',
-			'materi' => 'required',
-			'absen' => 'required',
-			'notulen' => 'required',
-			'dokumentasi' => 'required|array'
+
+			// 'undangan' => 'required',
+			// 'materi' => 'required',
+			// 'absen' => 'required',
+			// 'notulen' => 'required',
+			'dokumentasi' => 'array'
         ];
     }
 }

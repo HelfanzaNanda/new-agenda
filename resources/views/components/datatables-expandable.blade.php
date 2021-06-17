@@ -66,11 +66,7 @@ tr.shown td.details-control {
 					"defaultContent": ''
 				},
 				@foreach($columns as $column=>$title)
-					@if($column == 'kegiatan')
-						{ "data": "{{$column}}",  "width": "200%" },	
-					@else
-						{ "data": "{{$column}}" },
-					@endif
+					{ "data": "{{$column}}" },
 				@endforeach
 			],
 		});

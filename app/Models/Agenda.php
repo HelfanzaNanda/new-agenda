@@ -23,4 +23,9 @@ class Agenda extends Model
 	{
 		return $this->belongsTo(User::class, 'disposisi');
 	}
+
+	public function absens()
+	{
+		return $this->hasMany(Absen::class, 'status');
+	}
 }

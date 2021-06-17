@@ -7,13 +7,16 @@ use App\Http\Requests\Agenda\CreateRequest;
 use App\Http\Requests\Agenda\UpdateRequest;
 use App\Models\Agenda;
 use App\Traits\ConvertDate;
+use App\Traits\GetDisposisi;
 use App\Traits\UploadFile;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use PDO;
 
 class AgendaController extends Controller
 {
-	use ConvertDate, UploadFile;
+	use ConvertDate, UploadFile, GetDisposisi;
     
 	public function index()
 	{
@@ -22,7 +25,8 @@ class AgendaController extends Controller
 
 	public function create()
 	{
-		$users = User::where('is_login', true)->get();
+		$users = User::with('roles')->where('is_login', true)->get();
+		$users = $this->getDisposisi();
 		return view('agenda.create', [
 			'users' => $users
 		]);
@@ -42,7 +46,9 @@ class AgendaController extends Controller
 	public function detail($id)
 	{
 		$agenda = Agenda::with('documentations', 'user')->whereId($id)->first();
-		$agenda['daterange'] = $agenda->tanggal_mulai->format('m/d/Y') . ' - ' . $agenda->tanggal_selesai->format('m/d/Y');
+		$agenda['daterange'] = $agenda->tanggal_mulai->format('d F Y') . ' - ' . $agenda->tanggal_selesai->format('d F Y');
+		$agenda['jam_mulai'] = Carbon::parse($agenda->jam_mulai)->format('H:i');
+		$agenda['jam_selesai'] = $agenda->jam_selesai ? Carbon::parse($agenda->jam_selesai)->format('H:i') : 'Selesai';
 		return $agenda;
 	}
 
@@ -53,21 +59,22 @@ class AgendaController extends Controller
 			$params['jam_selesai'] = null;
 		}
 		$params['pelaksana_kegiatan'] = $request->pelaksana;
-		$params['tanggal_mulai'] = $this->convertDate(substr($request->date_range, 0, 10));
-		$params['tanggal_selesai'] = $this->convertDate(substr($request->date_range, 13));
-		$params['undangan'] = $this->uploadFile($request->file('undangan'), 'agendas');
-		$params['materi'] = $this->uploadFile($request->file('materi'), 'agendas');
-		$params['daftar_hadir'] = $this->uploadFile($request->file('absen'), 'agendas');
-		$params['notulen'] = $this->uploadFile($request->file('notulen'), 'agendas');
+		$params['tanggal_mulai'] = $this->convertDate($request->tanggal_mulai);
+		$params['tanggal_selesai'] = $this->convertDate($request->tanggal_selesai);
+		$params['undangan'] = $request->file('undangan') ?  $this->uploadFile($request->file('undangan'), 'agendas') : null;
+		$params['materi'] = $request->file('materi') ?  $this->uploadFile($request->file('materi'), 'agendas') : null;
+		$params['daftar_hadir'] = $request->file('absen') ?  $this->uploadFile($request->file('absen'), 'agendas') : null;
+		$params['notulen'] = $request->file('notulen') ?  $this->uploadFile($request->file('notulen'), 'agendas') : null;
 		$agenda = Agenda::create($params);
 		
-		foreach($request->dokumentasi as $doc){
-			$agenda->documentations()->create([
-				'dokumentasi' => $this->uploadFile($doc, 'agendas')
-			]);
+		if($request->dokumentasi){
+			foreach($request->dokumentasi as $doc){
+				$agenda->documentations()->create([
+					'dokumentasi' => $this->uploadFile($doc, 'agendas')
+				]);
+			}
 		}
 		
-
 		return response()->json([
 			'message' => 'berhasil menambahkan data'
 		]);
@@ -120,31 +127,44 @@ class AgendaController extends Controller
 			return $row->user->name;
 		})
 		->addColumn('status', function($row){
-			return 'status';
+			return $row->absens()->count() ? '<i class="fas fa-notification></i>' : '-';
 		})
 		->addColumn('jam', function($row){
-			return $row->jam_mulai . ' - ' . ($row->jam_selesai ?? 'Selesai');
+			return Carbon::parse($row->jam_mulai)->format('H:i') . ' - ' . ($row->jam_selesai ?? 'Selesai');
+		})
+		->addColumn('file_materi', function($row){
+			if($row->materi){
+				$btn = '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
+				$btn .= ' ' . csrf_field().' ';
+				$btn .= '	<input type="hidden" value="'.$row->materi.'" name="file">';
+				$btn .= '	<button class="btn btn-primary btn-sm text-white">Download</button>';
+				$btn .= '</form>';
+			}else{
+				$btn = '-';
+			}
+			return $btn;
+		})
+
+		->addColumn('file_undangan', function($row){
+			if($row->undangan){
+				$btn = '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
+				$btn .= ' ' . csrf_field().' ';
+				$btn .= '	<input type="hidden" value="'.$row->undangan.'" name="file">';
+				$btn .= '	<button class="btn btn-primary btn-sm text-white">Download</button>';
+				$btn .= '</form>';
+			}else{
+				$btn = '-';
+			}
+			return $btn;
 		})
         ->addColumn('_buttons', function($row){
 			$btn = '';
-			$btn .= '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
-			$btn .= ' ' . csrf_field().' ';
-			$btn .= '	<input type="hidden" value="'.$row->undangan.'" name="file">';
-			$btn .= '	<button class="btn btn-primary text-white">Download Undangan</button>';
-			$btn .= '</form>';
-			
-			$btn .= '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
-			$btn .= ' ' . csrf_field().' ';
-			$btn .= '	<input type="hidden" value="'.$row->materi.'" name="file">';
-			$btn .= '	<button class="btn btn-primary text-white">Download Materi</button>';
-			$btn .= '</form>';
-
-            $btn .= '<a data-id="'.$row->id.'"  class="btn-detail btn btn-sm btn-primary text-white mr-2">Detail</i></a>';
-            $btn .= '<a  href="'.route('agenda.edit', $row->id).'" class="btn-edit btn btn-sm btn-warning mr-2"><i class="fa fa-edit"></i></a>';
-            $btn .= '<a data-id="'.$row->id.'" class="btn-delete btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>';
+            $btn .= '<a data-id="'.$row->id.'"  class="btn-detail btn btn-sm btn-primary text-white mr-2"><i class="fas fa-eye"></i></a>';
+            $btn .= '<a  href="'.route('agenda.edit', $row->id).'" class="btn-edit btn btn-sm btn-warning text-white mr-2"><i class="fa fa-edit"></i></a>';
+            $btn .= '<a data-id="'.$row->id.'" class="btn-delete btn btn-sm text-white btn-danger"><i class="fa fa-trash"></i></a>';
             return $btn;
         })
-        ->rawColumns(['_buttons']);
+        ->rawColumns(['_buttons', 'file_materi', 'file_undangan']);
         return $datatables->toJson();
 	}
 

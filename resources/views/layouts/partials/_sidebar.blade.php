@@ -33,7 +33,7 @@
 			<ul class="vertical-nav-menu">
 				<li class="app-sidebar__heading">Dashboard</li>
 				<li>
-					<a href="index.html" class="{{ request()->is('/') ? 'mm-active' : '' }}">
+					<a href="{{ route('dashboard.index') }}" class="{{ request()->is('/') ? 'mm-active' : '' }}">
 						<i class="metismenu-icon fas fa-home"></i>
 						Dashboard
 					</a>
@@ -50,17 +50,6 @@
 					<a href="{{ route('agenda.index') }}" class="{{ request()->is('agenda') ? 'mm-active' : '' }}">
 						<i class="metismenu-icon fas fa-calendar"></i>
 						Agenda
-					</a>
-				</li>
-				<li class="app-sidebar__heading">Role & Permissions</li>
-				<li>
-					<a href="#" class="{{ request()->is('role') ? 'mm-active' : '' }}">
-						<i class="metismenu-icon pe-7s-display2"></i>
-						Role
-					</a>
-					<a href="#" class="{{ request()->is('role') ? 'mm-active' : '' }}">
-						<i class="metismenu-icon pe-7s-display2"></i>
-						Permissions
 					</a>
 				</li>
 			</ul>

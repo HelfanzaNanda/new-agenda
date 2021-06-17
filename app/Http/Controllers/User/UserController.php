@@ -55,8 +55,8 @@ class UserController extends Controller
         $datatables = datatables($users)
 		->addIndexColumn()
         ->addColumn('_buttons', function($row){
-            $btn = '<a data-id="'.$row->id.'" class="btn-edit btn btn-sm btn-warning mr-2"><i class="fa fa-edit"></i></a>';
-            $btn .= '<a data-id="'.$row->id.'" class="btn-delete btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>';
+            $btn = '<a data-id="'.$row->id.'" class="btn-edit btn btn-sm btn-warning text-white mr-2"><i class="fa fa-edit"></i></a>';
+            $btn .= '<a data-id="'.$row->id.'" class="btn-delete btn btn-sm text-white btn-danger"><i class="fa fa-trash"></i></a>';
             return $btn;
         })
         ->rawColumns(['_buttons']);

@@ -5,6 +5,7 @@
 use App\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,7 @@ use Illuminate\Support\Str;
 */
 
 $factory->define(User::class, function (Faker $faker) {
+	//$roles = Role::whereNotIn('name', ['superadmin', 'admin'])->get()->pluck('id')->toArray();
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,

@@ -23,10 +23,10 @@ class CreateAgendasTable extends Migration
 			$table->string('tempat');
 			$table->string('pelaksana_kegiatan');
 			$table->foreignId('disposisi');
-			$table->string('undangan');
-			$table->string('materi');
-			$table->string('daftar_hadir');
-			$table->string('notulen');
+			$table->string('undangan')->nullable();
+			$table->string('materi')->nullable();
+			$table->string('daftar_hadir')->nullable();
+			$table->string('notulen')->nullable();
             $table->timestamps();
         });
     }

@@ -15,60 +15,60 @@
 						<small>Tanggal</small>
 						<p class="text-daterange"></p>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-2">
 						<small>Jam Mulai</small>
 						<p class="text-jam-mulai"></p>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-2">
 						<small>Jam Selesai</small>
 						<p class="text-jam-selesai"></p>
 					</div>
-				</div>
-
-				<div class="form-group">
-					<small>Kegiatan</small>
-					<p class="text-kegiatan"></p>
-				</div>
-
-				<div class="form-group">
-					<small>Tempat</small>
-					<p class="text-tempat"></p>
-				</div>
-
-				<div class="row">
-					<div class="col-md-6">
-						<div class="form-group">
-							<small>Pelaksana Kegiatan</small>
-							<p class="text-pelaksana-kegiatan"></p>
-						</div>
-					</div>
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<div class="form-group">
 							<small>Disposisi</small>
 							<p class="text-disposisi"></p>
 						</div>
 					</div>
 				</div>
+
+				<div class="row">
+					<div class="col-md-5">
+						<div class="form-group">
+							<small>Tempat</small>
+							<p class="text-tempat"></p>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<small>Pelaksana Kegiatan</small>
+							<p class="text-pelaksana-kegiatan"></p>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<small>Kegiatan</small>
+							<p class="text-kegiatan"></p>
+						</div>
+					</div>
+				</div>
 				
 				<div class="row mb-2">
-					<div class="col-md-6">
+					<div class="col-md-3">
 						<small class="d-block mb-1">Undangan</small>
 						<img src="" class="img-undangan" width="100" height="100"
 						style="object-fit: cover; object-position: center">
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-3">
 						<small class="d-block mb-1">Materi</small>
 						<img src="" class="img-materi" width="100" height="100"
 						style="object-fit: cover; object-position: center">
 					</div>
-				</div>
-				<div class="row mb-2">
-					<div class="col-md-6">
+					<div class="col-md-3">
 						<small class="d-block mb-1">Daftar Hadir</small>
 						<img src="" class="img-absen" width="100" height="100"
 						style="object-fit: cover; object-position: center">
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-3">
 						<small class="d-block mb-1">Notulen</small>
 						<img src="" class="img-notulen" width="100" height="100"
 						style="object-fit: cover; object-position: center">
