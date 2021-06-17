@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function(){
 	Route::prefix('agenda')->group(function(){
 		Route::get('', 'Agenda\AgendaController@index')->name('agenda.index');
 		Route::post('/datatables', 'Agenda\AgendaController@datatables')->name('agenda.datatables');
+		Route::get('/autocomplete/pelaksana','Agenda\AgendaController@get')->name('agenda.search');
 		Route::get('create', 'Agenda\AgendaController@create')->name('agenda.create');
 		Route::post('create', 'Agenda\AgendaController@store');
 		Route::get('edit/{id}', 'Agenda\AgendaController@edit')->name('agenda.edit');

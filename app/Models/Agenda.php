@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Agenda extends Model
 {
@@ -21,7 +20,7 @@ class Agenda extends Model
 
 	public function user()
 	{
-		return $this->belongsTo(User::class, 'disposisi');
+		return $this->belongsTo(User::class, 'disposisi', 'id');
 	}
 
 	public function absens()

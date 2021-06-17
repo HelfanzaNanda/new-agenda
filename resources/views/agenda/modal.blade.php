@@ -55,21 +55,25 @@
 				<div class="row mb-2">
 					<div class="col-md-3">
 						<small class="d-block mb-1">Undangan</small>
+						<p class="img-undangan-notfound"></p>
 						<img src="" class="img-undangan" width="100" height="100"
 						style="object-fit: cover; object-position: center">
 					</div>
 					<div class="col-md-3">
 						<small class="d-block mb-1">Materi</small>
+						<p class="img-materi-notfound"></p>
 						<img src="" class="img-materi" width="100" height="100"
 						style="object-fit: cover; object-position: center">
 					</div>
 					<div class="col-md-3">
 						<small class="d-block mb-1">Daftar Hadir</small>
+						<p class="img-absen-notfound"></p>
 						<img src="" class="img-absen" width="100" height="100"
 						style="object-fit: cover; object-position: center">
 					</div>
 					<div class="col-md-3">
 						<small class="d-block mb-1">Notulen</small>
+						<p class="img-notulen-notfound"></p>
 						<img src="" class="img-notulen" width="100" height="100"
 						style="object-fit: cover; object-position: center">
 					</div>
@@ -77,6 +81,7 @@
 
 				<div>
 					<small>Dokumentasi</small>
+					<p class="img-doc-notfound"></p>
 					<div class="docs"></div>
 				</div>
 

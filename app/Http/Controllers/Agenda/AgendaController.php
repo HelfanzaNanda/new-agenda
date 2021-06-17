@@ -118,7 +118,24 @@ class AgendaController extends Controller
 
 	public function datatables(Request $request)
 	{
-		$agendas = Agenda::all();
+		$query = Agenda::query();
+		if($request->tanggal_mulai && $request->tanggal_selesai){
+			$query->whereDate('tanggal_mulai', '<=', $this->convertDate($request->tanggal_mulai))
+			->whereDate('tanggal_selesai', '>=', $this->convertDate($request->tanggal_selesai));
+		}
+
+		if($request->pelaksana){
+			$query->where('pelaksana_kegiatan', $request->pelaksana);
+		}
+		if($request->disposisi){
+			$query->where('disposisi', $request->disposisi);
+		}
+		if($request->status){
+			$query;
+		}
+
+		$agendas = $query->get();
+		
         $datatables = datatables($agendas)
 		->addIndexColumn()
 		->addColumn('h/t', function($row){
@@ -133,39 +150,54 @@ class AgendaController extends Controller
 		->addColumn('jam', function($row){
 			return Carbon::parse($row->jam_mulai)->format('H:i') . ' - ' . ($row->jam_selesai ?? 'Selesai');
 		})
-		->addColumn('file_materi', function($row){
-			if($row->materi){
-				$btn = '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
-				$btn .= ' ' . csrf_field().' ';
-				$btn .= '	<input type="hidden" value="'.$row->materi.'" name="file">';
-				$btn .= '	<button class="btn btn-primary btn-sm text-white">Download</button>';
-				$btn .= '</form>';
-			}else{
-				$btn = '-';
-			}
-			return $btn;
-		})
-
-		->addColumn('file_undangan', function($row){
+		->addColumn('file', function($row){
+			$btn = '';
+			$btn .=	'<table>';
+			$btn .=	'<tr>';
+			$btn .=	'	<td>';
 			if($row->undangan){
-				$btn = '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
-				$btn .= ' ' . csrf_field().' ';
-				$btn .= '	<input type="hidden" value="'.$row->undangan.'" name="file">';
-				$btn .= '	<button class="btn btn-primary btn-sm text-white">Download</button>';
-				$btn .= '</form>';
+				$btn .= '	<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
+				$btn .= ' 		' . csrf_field().' ';
+				$btn .= '		<input type="hidden" value="'.$row->undangan.'" name="file">';
+				$btn .= '		<button class="btn btn-primary btn-sm text-white">';
+				$btn .= '			<i class="fas fa-download"></i>  Undangan';
+				$btn .= '		</button>';
+				$btn .= '	</form>';
 			}else{
-				$btn = '-';
+				$btn .= '-';
 			}
+			$btn .=	'	</td>';
+			$btn .=	'</tr>';
+
+			$btn .=	'<tr>';
+			$btn .=	'	<td>';
+			if($row->materi){
+				$btn .= '	<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
+				$btn .= ' 		' . csrf_field().' ';
+				$btn .= '		<input type="hidden" value="'.$row->materi.'" name="file">';
+				$btn .= '		<button class="btn btn-primary btn-sm text-white">';
+				$btn .= '			<i class="fas fa-download"></i>  Materi';
+				$btn .= '		</button>';
+				$btn .= '	</form>';
+			}else{
+				$btn .= '-';
+			}
+			$btn .=	'	</td>';
+			$btn .=	'</tr>';
+			$btn .=	'</table>';
 			return $btn;
 		})
         ->addColumn('_buttons', function($row){
 			$btn = '';
-            $btn .= '<a data-id="'.$row->id.'"  class="btn-detail btn btn-sm btn-primary text-white mr-2"><i class="fas fa-eye"></i></a>';
-            $btn .= '<a  href="'.route('agenda.edit', $row->id).'" class="btn-edit btn btn-sm btn-warning text-white mr-2"><i class="fa fa-edit"></i></a>';
-            $btn .= '<a data-id="'.$row->id.'" class="btn-delete btn btn-sm text-white btn-danger"><i class="fa fa-trash"></i></a>';
+			$btn .= '<div class="btn-group" role="group">';
+			$btn .= '	<a data-id="'.$row->id.'"  class="btn-detail btn btn-sm btn-primary text-white"><i class="fas fa-eye"></i></a>';
+            $btn .= '	<a  href="'.route('agenda.edit', $row->id).'" class="btn-edit btn btn-sm btn-warning text-white"><i class="fa fa-edit"></i></a>';
+            $btn .= '	<a data-id="'.$row->id.'" class="btn-delete btn btn-sm text-white btn-danger"><i class="fa fa-trash"></i></a>';
+			$btn .= '</div>';
+            
             return $btn;
         })
-        ->rawColumns(['_buttons', 'file_materi', 'file_undangan']);
+        ->rawColumns(['_buttons', 'file']);
         return $datatables->toJson();
 	}
 
@@ -183,5 +215,17 @@ class AgendaController extends Controller
 	{
 		$file = $request->file;
 		return response()->download($file);
+	}
+
+	public function get(Request $request)
+	{
+		if($request->type == 'pelaksana'){
+			return Agenda::where('pelaksana_kegiatan', 'like', '%' . $request->key . '%')->get()->pluck('pelaksana_kegiatan');
+		}elseif($request->type == 'disposisi'){
+			return Agenda::with('user')
+			->whereHas('user', function($q) use($request){
+				$q->where('name', 'like', '%'. $request->key. '%');
+			})->get();
+		}
 	}
 }

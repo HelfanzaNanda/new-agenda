@@ -15,7 +15,8 @@
 		</div>
 		<div class="page-title-actions">
 			<button type="button" class="btn-add btn-shadow mr-3 btn btn-primary">
-				Tambah User
+				<i class="fas fa-plus"></i>
+				 Tambah User
 			</button>
 		</div>    
 	</div>
@@ -29,6 +30,7 @@
 					'columns'=> [
 						'name'	=> '<th>Nama</th>',
 						'email'	=> '<th>Email</th>',
+						'role'	=> '<th>Role</th>',
 						'_buttons'=> '<th>Action</th>'
 					],
 				])

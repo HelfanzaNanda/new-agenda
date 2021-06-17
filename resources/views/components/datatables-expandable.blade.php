@@ -1,11 +1,11 @@
 <style>
 	td.details-control {
-    background: url('https://datatables.net/examples/resources/details_open.png') no-repeat center center;
-    cursor: pointer;
-}
+		background: url('https://datatables.net/examples/resources/details_open.png') no-repeat center center;
+		cursor: pointer;
+	}
 tr.shown td.details-control {
-    background: url('https://datatables.net/examples/resources/details_close.png') no-repeat center center;
-}
+		background: url('https://datatables.net/examples/resources/details_close.png') no-repeat center center;
+	}
 </style>
 
 <div class="col-md-12">
@@ -29,7 +29,7 @@ tr.shown td.details-control {
 @push('scripts')
 <script type="text/javascript">
 
-	function format ( d ) {
+	function format (d) {
 		console.log(d);
 		return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 			'<tr>'+
@@ -56,13 +56,16 @@ tr.shown td.details-control {
 				"type": "POST",
 				"data":function(d) {
 					d._token = "{{csrf_token()}}"
+					@foreach($filters as $filter)
+						{{ 'd.'. $filter }} = $('#input-{{ $filter }}').val()
+					@endforeach
 				}
 			},
 			"columns": [
 				{
-					"className":      'details-control',
+					"className":      'details-control pl-5',
 					"orderable":      false,
-					"data":           null,
+					"data":           'DT_RowIndex',
 					"defaultContent": ''
 				},
 				@foreach($columns as $column=>$title)

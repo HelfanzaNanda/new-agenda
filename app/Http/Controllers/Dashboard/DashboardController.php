@@ -33,32 +33,57 @@ class DashboardController extends Controller
 
 	public function datatables(Request $request)
 	{
-		$users = Agenda::whereDate('tanggal_mulai', $this->convertDate($request->date))->get();
-        $datatables = datatables($users)
-		->addIndexColumn()
-		->addColumn('file_materi', function($row){
-			if($row->materi){
-				$btn = '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
-				$btn .= ' ' . csrf_field().' ';
-				$btn .= '	<input type="hidden" value="'.$row->materi.'" name="file">';
-				$btn .= '	<button class="btn btn-primary btn-sm text-white">Download</button>';
-				$btn .= '</form>';
-			}else{
-				$btn = '-';
-			}
-			return $btn;
-		})
+		$query = Agenda::whereDate('tanggal_mulai', $this->convertDate($request->date));
 
-		->addColumn('file_undangan', function($row){
+		if($request->pelaksana){
+			$query->where('pelaksana_kegiatan', $request->pelaksana);
+		}
+		if($request->disposisi){
+			$query->where('disposisi', $request->disposisi);
+		}
+		if($request->status){
+			$query->whereDate('tanggal_mulai', $this->convertDate($request->date));
+		}
+
+		$agendas = $query->get();
+
+        $datatables = datatables($agendas)
+		->addIndexColumn()
+		->addColumn('file', function($row){
+			$btn = '';
+			$btn .=	'<table>';
+			$btn .=	'<tr>';
+			$btn .=	'	<td>';
 			if($row->undangan){
-				$btn = '<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
-				$btn .= ' ' . csrf_field().' ';
-				$btn .= '	<input type="hidden" value="'.$row->undangan.'" name="file">';
-				$btn .= '	<button class="btn btn-primary btn-sm text-white">Download</button>';
-				$btn .= '</form>';
+				$btn .= '	<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
+				$btn .= ' 		' . csrf_field().' ';
+				$btn .= '		<input type="hidden" value="'.$row->undangan.'" name="file">';
+				$btn .= '		<button class="btn btn-primary btn-sm text-white">';
+				$btn .= '			<i class="fas fa-download"></i>  Undangan';
+				$btn .= '		</button>';
+				$btn .= '	</form>';
 			}else{
-				$btn = '-';
+				$btn .= '-';
 			}
+			$btn .=	'	</td>';
+			$btn .=	'</tr>';
+
+			$btn .=	'<tr>';
+			$btn .=	'	<td>';
+			if($row->materi){
+				$btn .= '	<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
+				$btn .= ' 		' . csrf_field().' ';
+				$btn .= '		<input type="hidden" value="'.$row->materi.'" name="file">';
+				$btn .= '		<button class="btn btn-primary btn-sm text-white">';
+				$btn .= '			<i class="fas fa-download"></i>  Materi';
+				$btn .= '		</button>';
+				$btn .= '	</form>';
+			}else{
+				$btn .= '-';
+			}
+			$btn .=	'	</td>';
+			$btn .=	'</tr>';
+			$btn .=	'</table>';
 			return $btn;
 		})
 		
@@ -71,7 +96,7 @@ class DashboardController extends Controller
 		->addColumn('disposisi', function($row){
 			return $row->user->name;
 		})
-		->rawColumns(['file_materi', 'file_undangan']);
+		->rawColumns(['file']);
         return $datatables->toJson();
 	}
 

@@ -13,6 +13,22 @@
 		border-radius: 0.3rem;
 		cursor: pointer;
 	}
+	.select2-container--default .select2-selection--single .select2-selection__rendered {
+		color: #444;
+		line-height: 28px;
+		display: block;
+		width: auto;
+		height: calc(2.25rem + 2px);
+		padding: .375rem .75rem;
+		font-size: 1rem;
+		font-weight: 400;
+		line-height: 1.5;
+		color: #495057;
+		background-color: #fff;
+		background-clip: padding-box;
+		border: 1px solid #ced4da;
+		border-radius: .25rem;
+	}
 </style>
 <div class="app-page-title">
 	<div class="page-title-wrapper">
@@ -120,51 +136,53 @@
 						<div class="col-md-3">
 							<label class="d-block" for="undangan">Undangan</label>
 							<input name="undangan" class="undangan" onchange="showPreviewImage(this)" type="file" id="undangan-btn" hidden/>
-							<label class="d-block text-center label-actual-btn" for="undangan-btn">Pilih File</label>
+							<label class="d-block text-center label-actual-btn" for="undangan-btn"><i class="fas fa-upload"></i>&nbsp;  Pilih File</label>
 							<img id="img-undangan" src="" alt="" style="display: none; width: 100px; height: 100px; object-fit: cover; object-position: center">
 							<x-validation-error id="error-undangan"/>
 						</div>
 						<div class="col-md-3">
 							<label class="d-block" for="materi">Materi</label>
 							<input name="materi" class="materi" onchange="showPreviewImage(this)" type="file" id="materi-btn" hidden/>
-							<label class="d-block text-center label-actual-btn" for="materi-btn">Pilih File</label>
+							<label class="d-block text-center label-actual-btn" for="materi-btn"><i class="fas fa-upload"></i>&nbsp;  Pilih File</label>
 							<img id="img-materi" src="" alt="" style="display: none; width: 100px; height: 100px; object-fit: cover; object-position: center">
 							<x-validation-error id="error-materi"/>
 						</div>
 						<div class="col-md-3">
 							<label class="d-block" for="absen">Daftar Hadir</label>
 							<input name="absen" class="absen" onchange="showPreviewImage(this)" type="file" id="absen-btn" hidden/>
-							<label class="d-block text-center label-actual-btn" for="absen-btn">Pilih File</label>
+							<label class="d-block text-center label-actual-btn" for="absen-btn"><i class="fas fa-upload"></i>&nbsp;  Pilih File</label>
 							<img id="img-absen" src="" alt="" style="display: none; width: 100px; height: 100px; object-fit: cover; object-position: center">
 							<x-validation-error id="error-absen"/>
 						</div>
 						<div class="col-md-3">
 							<label class="d-block" for="notulen">Notulen</label>
 							<input name="notulen" class="notulen" onchange="showPreviewImage(this)" type="file" id="notulen-btn" hidden/>
-							<label class="d-block text-center label-actual-btn" for="notulen-btn">Pilih File</label>
+							<label class="d-block text-center label-actual-btn" for="notulen-btn"><i class="fas fa-upload"></i>&nbsp;  Pilih File</label>
 							<img id="img-notulen" src="" alt="" style="display: none; width: 100px; height: 100px; object-fit: cover; object-position: center">
 							<x-validation-error id="error-notulen"/>
 						</div>
 					</div>
 					
-					<div class="documentations">
-						<div class="d-flex justify-content-end">
-							<button class="btn btn-primary btn-add-item">Tambah Dokumentasi</button>
-						</div>
+					<div class=" mb-3">
 						<label class="block">Dokumentasi</label>
-						<x-validation-error id="error-dokumentasi[0]"/>
-						<div class="row mb-2 align-items-start">
-							<div class="col-md-3">
-								<input name="dokumentasi[]" class="dokumentasi-0" onchange="showPreviewImage(this)" type="file" id="doc-btn-0" hidden/>
-								<label class="d-block text-center label-actual-btn" for="doc-btn-0">Pilih File</label>
-								<img id="img-dokumentasi-0" src="" alt="" style="display: none; width: 100px; height: 100px; object-fit: cover; object-position: center">
+						<div class="row documentations">
+							<div class="col-md-2 mb-3 col-file-0">
+								<input id="choose-file-0" name="dokumentasi[]" onchange="addDocs(this)" type="file" hidden/>
+								<img id="img-doc-0" src="https://via.placeholder.com/150" alt="" style="width: 100px; height: 100px; object-fit: cover; object-position: center">
+							</div>
+							<div class="col-md-2 mb-3">
+								<label class="btn btn-primary btn-add-item btn-block d-flex justify-content-center align-items-center" 
+								style="height: 100px; width: 100px" for="choose-file-0">
+									<i class="fas fa-plus"></i>
+								</label>
 							</div>
 						</div>
+						<x-validation-error id="error-dokumentasi[0]"/>
 					</div>
 
 					<div>
-						<a href="{{ route('agenda.index') }}" type="button" class="btn btn-secondary" >Close</a>
-						<button type="button" class="btn-save btn btn-primary">Save</button>
+						<a href="{{ route('agenda.index') }}" type="button" class="btn btn-secondary" >Kembali</a>
+						<button type="button" class="btn-save btn btn-primary">Simpan</button>
 					</div>
 				</form>
 			</div>
@@ -176,6 +194,33 @@
 @push('scripts')
 	<script>
 		let indexItem = 0
+
+		let indexDoc = 0
+		function addDocs(input) {
+			$('.col-file-'+indexDoc).css('display', '')
+			if (input.files && input.files[0]) {
+				$('#img-doc-'+indexDoc).attr('src', URL.createObjectURL(event.target.files[0]))
+			}
+			indexDoc++
+			$('.btn-add-item').removeAttr('for').attr('for', 'choose-file-'+indexDoc)
+			$('.documentations').prepend(showItem());
+		}
+
+		$(document).on('click', '.btn-remove-item', function (e) {  
+			e.preventDefault()
+			const key = $(this).data('key')
+			$('.col-file-'+key).remove()
+		})
+
+		function showItem() {
+			let item = ''
+				item += '<div class="col-md-2 mb-3 col-file-'+indexDoc+'" style="display:none">'
+				item += '	<input id="choose-file-'+indexDoc+'" name="dokumentasi[]" onchange="addDocs(this)" type="file" hidden/>'
+				item += '	<img id="img-doc-'+indexDoc+'" src="https://via.placeholder.com/150" alt="" style="width: 100px; height: 100px; object-fit: cover; object-position: center">'
+				item += '	<button data-key="'+indexDoc+'" class="btn btn-remove-item btn-danger btn-block btn-sm" style="width: 100px">Hapus</button>'
+				item += '</div>'
+			return item;
+		}
 
 		function showPreviewImage(input){
 			let classes = input.classList.value
@@ -212,33 +257,6 @@
 			});
 		})
 
-		$(document).on('click', '.btn-add-item', function (e) {  
-			e.preventDefault()
-			indexItem++
-			$('.documentations').append(showItem())
-		})
-
-		$(document).on('click', '.btn-remove-item', function (e) {  
-			e.preventDefault()
-			const key = $(this).data('key')
-			$('.row-'+key).remove()
-		})
-
-		function showItem() {  
-			let item = ''
-				item += '<div class="row align-items-start row-'+indexItem+'">'
-				item += '	<div class="col-md-6">'
-				item += '		<div class="form-group">'
-				item += '			<input type="file" name="dokumentasi[]" id="input-dokumentasi-'+indexItem+'" class="form-control">'
-				item += '			<x-validation-error id="error-dokumentasi[0]"/>'
-				item += '		</div>'
-				item += '	</div>'
-				item += '	<div class="col-md-6">'
-				item += '		<button data-key="'+indexItem+'" class="btn btn-remove-item btn-danger ">Remove</button>'
-				item += '	</div>'
-				item += '</div>'
-			return item;
-		}
 
 		$(document).on('change', '#check-jam-selesai', function (e) {  
 			e.preventDefault()
@@ -288,11 +306,11 @@
 			try {
 				const response = await axios.post(url, form)
 				resetForm()
-				hideLoading(e, "Save")
+				hideLoading(e, "Simpan")
 				window.location.href ="{{ route('agenda.index') }}"
 				toastr["success"](response.data.message, "success")
 			} catch (error) {
-				hideLoading(e, "Save")
+				hideLoading(e, "Simpan")
 				if(error.response.status === 422){
 					const errors = error.response.data.errors
 					Object.keys(errors).map(field => $('#error-'+field).text(errors[field][0]))	
