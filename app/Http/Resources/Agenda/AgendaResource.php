@@ -24,10 +24,10 @@ class AgendaResource extends JsonResource
 			'tempat' => $this->tempat,
 			'pelaksana_kegiatan' => $this->pelaksana_kegiatan,
 			'disposisi' => $this->user->name,
-			'undangan' => $this->undangan,
-			'materi' => $this->materi,
-			'daftar_hadir' => $this->daftar_hadir,
-			'notulen' => $this->notulen,
+			'undangan' => url('/') .'/' . $this->undangan,
+			'materi' => url('/') .'/' . $this->materi,
+			'daftar_hadir' => url('/') .'/' . $this->daftar_hadir,
+			'notulen' => url('/') .'/' . $this->notulen,
 			'dokumentations' => $this->documentations,
 		];
     }
