@@ -151,40 +151,46 @@ class AgendaController extends Controller
 			return Carbon::parse($row->jam_mulai)->format('H:i') . ' - ' . ($row->jam_selesai ?? 'Selesai');
 		})
 		->addColumn('file', function($row){
+			//18 Juni 2021
+			//Tidak perlu table didalam table
+
+
+
 			$btn = '';
-			$btn .=	'<table>';
-			$btn .=	'<tr>';
-			$btn .=	'	<td>';
+			// $btn .=	'<table>';
+			// $btn .=	'<tr>';
+			// $btn .=	'	<td>';
 			if($row->undangan){
 				$btn .= '	<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
 				$btn .= ' 		' . csrf_field().' ';
 				$btn .= '		<input type="hidden" value="'.$row->undangan.'" name="file">';
-				$btn .= '		<button class="btn btn-primary btn-sm text-white">';
+				$btn .= '		<button class="btn btn-primary btn-block btn-sm text-white">';
 				$btn .= '			<i class="fas fa-download"></i>  Undangan';
 				$btn .= '		</button>';
 				$btn .= '	</form>';
 			}else{
-				$btn .= '-';
+				$btn .= '<div>-</div>';
 			}
-			$btn .=	'	</td>';
-			$btn .=	'</tr>';
+			// $btn .=	'	</td>';
+			// $btn .=	'</tr>';
 
-			$btn .=	'<tr>';
-			$btn .=	'	<td>';
+			// $btn .=	'<tr>';
+			// $btn .=	'	<td>';
 			if($row->materi){
 				$btn .= '	<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
 				$btn .= ' 		' . csrf_field().' ';
 				$btn .= '		<input type="hidden" value="'.$row->materi.'" name="file">';
-				$btn .= '		<button class="btn btn-primary btn-sm text-white">';
+				$btn .= '		<button class="btn btn-primary btn-block btn-sm text-white">';
 				$btn .= '			<i class="fas fa-download"></i>  Materi';
 				$btn .= '		</button>';
 				$btn .= '	</form>';
 			}else{
-				$btn .= '-';
+				$btn .= '<div>-</div>';
 			}
-			$btn .=	'	</td>';
-			$btn .=	'</tr>';
-			$btn .=	'</table>';
+			// $btn .=	'	</td>';
+			// $btn .=	'</tr>';
+			// $btn .=	'</table>';
+
 			return $btn;
 		})
         ->addColumn('_buttons', function($row){
