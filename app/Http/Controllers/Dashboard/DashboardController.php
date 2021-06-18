@@ -60,7 +60,7 @@ class DashboardController extends Controller
 				$btn .= '	<form action="'.route('agenda.download').'" target="_blank" method="POST">';
 				$btn .= ' 		' . csrf_field().' ';
 				$btn .= '		<input type="hidden" value="'.$row->undangan.'" name="file">';
-				$btn .= '		<button class="btn btn-primary btn-sm text-white btn-blocl mb-1">';
+				$btn .= '		<button class="btn btn-primary btn-sm text-white btn-block mb-1">';
 				$btn .= '			<i class="fas fa-download"></i>  Undangan';
 				$btn .= '		</button>';
 				$btn .= '	</form>';
@@ -76,7 +76,7 @@ class DashboardController extends Controller
 				$btn .= '	<form action="'.route('agenda.download').'" target="_blank" method="POST">';
 				$btn .= ' 		' . csrf_field().' ';
 				$btn .= '		<input type="hidden" value="'.$row->materi.'" name="file">';
-				$btn .= '		<button class="btn btn-primary btn-sm text-white btn-blocl mb-1">';
+				$btn .= '		<button class="btn btn-primary btn-sm text-white btn-block mb-1">';
 				$btn .= '			<i class="fas fa-download"></i>  Materi';
 				$btn .= '		</button>';
 				$btn .= '	</form>';
