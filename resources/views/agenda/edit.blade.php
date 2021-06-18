@@ -29,6 +29,9 @@
 		border: 1px solid #ced4da;
 		border-radius: .25rem;
 	}
+	.select2-selection{
+		border: none;
+	}
 </style>
 <div class="app-page-title">
 	<div class="page-title-wrapper">
@@ -64,7 +67,7 @@
 								<x-validation-error id="error-date_range" />
 							</div>
 							<div class="row">
-								<div class="col-md-3">
+								<div class="col-md-6">
 									<div class="form-group">
 										<label for="jam_mulai">Jam Mulai</label>
 										<input type="text" name="jam_mulai" id="input-jam-mulai" 
@@ -73,7 +76,7 @@
 										<x-validation-error id="error-jam_mulai"/>
 									</div>
 								</div>
-								<div class="col-md-3">
+								<div class="col-md-6">
 									<div class="form-group">
 										<label for="jam_selesai">Jam Selesai</label>
 										<input type="text" name="jam_selesai" id="input-jam-selesai" 
