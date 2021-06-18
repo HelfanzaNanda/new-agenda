@@ -30,7 +30,7 @@
 		border-radius: .25rem;
 	}
 	.select2-selection{
-		border: none;
+		border: none!important;
 	}
 </style>
 <div class="app-page-title">

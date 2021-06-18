@@ -33,7 +33,7 @@
 			<div class="card-body">
 				<nav class="nav nav-pills justify-content-center nav-justified mb-3" id="pills-tab" role="tablist">
 					@foreach ($results as $result)
-						<a class="nav-item position-relative nav-link text-center {{ $loop->first ? 'active' : '' }}" 
+						<a class="nav-item position-relative nav-link justify-content-center {{ $loop->first ? 'active' : '' }}" 
 							data-date="{{ $result['date'] }}" 
 							id="pills-{{ $result['date'] }}" data-toggle="pill" 
 						href="#pills" role="tab"
