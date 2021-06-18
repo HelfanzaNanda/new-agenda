@@ -5,12 +5,12 @@
 	.img-dashboard {
 		/* background-image: url('/images/bg.jpg'); */
 		background: #3f6ad8;
-		height: 300px;
+		/*height: 300px;*/
 		width: 100%;
 		object-fit: cover;
 		object-position: center;
 		border-radius: 5px;
-		padding: 0 100px;
+		padding: 20px 100px;
 	}
 	.nav-link {
 		background-color: #eee;
@@ -33,7 +33,7 @@
 			<div class="card-body">
 				<nav class="nav nav-pills justify-content-center nav-justified mb-3" id="pills-tab" role="tablist">
 					@foreach ($results as $result)
-						<a class="nav-item position-relative nav-link {{ $loop->first ? 'active' : '' }}" 
+						<a class="nav-item position-relative nav-link text-center {{ $loop->first ? 'active' : '' }}" 
 							data-date="{{ $result['date'] }}" 
 							id="pills-{{ $result['date'] }}" data-toggle="pill" 
 						href="#pills" role="tab"

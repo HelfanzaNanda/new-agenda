@@ -161,10 +161,10 @@ class AgendaController extends Controller
 			// $btn .=	'<tr>';
 			// $btn .=	'	<td>';
 			if($row->undangan){
-				$btn .= '	<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
+				$btn .= '	<form action="'.route('agenda.download').'" target="_blank" method="POST">';
 				$btn .= ' 		' . csrf_field().' ';
 				$btn .= '		<input type="hidden" value="'.$row->undangan.'" name="file">';
-				$btn .= '		<button class="btn btn-primary btn-block btn-sm text-white">';
+				$btn .= '		<button class="btn btn-primary btn-block btn-sm text-white mb-1">';
 				$btn .= '			<i class="fas fa-download"></i>  Undangan';
 				$btn .= '		</button>';
 				$btn .= '	</form>';
@@ -177,10 +177,10 @@ class AgendaController extends Controller
 			// $btn .=	'<tr>';
 			// $btn .=	'	<td>';
 			if($row->materi){
-				$btn .= '	<form action="'.route('agenda.download').'" class="d-inline mr-2" target="_blank" method="POST">';
+				$btn .= '	<form action="'.route('agenda.download').'" target="_blank" method="POST">';
 				$btn .= ' 		' . csrf_field().' ';
 				$btn .= '		<input type="hidden" value="'.$row->materi.'" name="file">';
-				$btn .= '		<button class="btn btn-primary btn-block btn-sm text-white">';
+				$btn .= '		<button class="btn btn-primary btn-block btn-sm text-white mb-1">';
 				$btn .= '			<i class="fas fa-download"></i>  Materi';
 				$btn .= '		</button>';
 				$btn .= '	</form>';
