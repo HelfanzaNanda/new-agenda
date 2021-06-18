@@ -38,10 +38,16 @@ Route::middleware('auth')->group(function(){
 		Route::delete('delete/{id}', 'Agenda\AgendaController@delete')->name('agenda.delete');
 		Route::post('download', 'Agenda\AgendaController@download')->name('agenda.download');
 		
-		
 		Route::post('store', 'User\UserController@createOrUpdate')->name('agenda.createorupdate');
 		Route::get('{id}', 'User\UserController@get')->name('agenda.get');
-		
+	});
+
+	Route::prefix('report')->group(function(){
+		Route::prefix('agenda')->group(function(){
+			Route::get('/', 'Report\Agenda\AgendaController@index')->name('report.agenda.index');
+			Route::post('/', 'Report\Agenda\AgendaController@datatables')->name('report.agenda.datatables');
+			Route::post('/pdf', 'Report\Agenda\AgendaController@pdf')->name('report.agenda.pdf');
+		});
 	});
 
 

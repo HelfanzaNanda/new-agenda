@@ -16,7 +16,7 @@ class DashboardController extends Controller
     public function index()
 	{
 		$now = Carbon::now();
-		$period = CarbonPeriod::create($now->translatedFormat('Y-m-d'), $now->addDays(7)->translatedFormat('Y-m-d'));
+		$period = CarbonPeriod::create($now->translatedFormat('Y-m-d'), $now->addDays(6)->translatedFormat('Y-m-d'));
 		$results = [];
 		foreach($period as $date){
 			$count = Agenda::whereDate('tanggal_mulai', $date->format('Y-m-d'))->count();

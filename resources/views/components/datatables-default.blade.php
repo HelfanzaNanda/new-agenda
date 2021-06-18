@@ -25,7 +25,12 @@
 				"type": "POST",
 				"data":function(d) {
 					d._token = "{{csrf_token()}}"
-				}
+					@isset($filters)
+						@foreach($filters as $filter)
+							{{ 'd.'. $filter }} = $('#filter-{{ $filter }}').val()
+						@endforeach
+					@endisset
+				},
 			},
 			"columns": [
 				{data: 'DT_RowIndex', name: 'DT_RowIndex'},

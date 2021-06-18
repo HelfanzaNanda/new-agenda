@@ -52,6 +52,13 @@
 						Agenda
 					</a>
 				</li>
+				<li class="app-sidebar__heading">Report</li>
+				<li>
+					<a href="{{ route('report.agenda.index') }}" class="{{ request()->is('report/agenda') ? 'mm-active' : '' }}">
+						<i class="metismenu-icon fas fa-file"></i>
+						Report
+					</a>
+				</li>
 			</ul>
 		</div>
 	</div>
