@@ -54,18 +54,16 @@
 					<div class="row">
 						<div class="col-md-6">
 							
+							<div class="form-group">
+								<label for="date_range">Tanggal</label>
+								<input type="text" name="date_range" id="input-date-range" 
+								value="{{ $agenda['daterange'] }}"
+								class="form-control daterange">
+								<input type="hidden" name="tanggal_mulai" id="input-tanggal_mulai">
+								<input type="hidden" name="tanggal_selesai" id="input-tanggal_selesai">
+								<x-validation-error id="error-date_range" />
+							</div>
 							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label for="date_range">Tanggal</label>
-										<input type="text" name="date_range" id="input-date-range" 
-										value="{{ $agenda['daterange'] }}"
-										class="form-control daterange">
-										<input type="hidden" name="tanggal_mulai" id="input-tanggal_mulai">
-										<input type="hidden" name="tanggal_selesai" id="input-tanggal_selesai">
-										<x-validation-error id="error-date_range" />
-									</div>
-								</div>
 								<div class="col-md-3">
 									<div class="form-group">
 										<label for="jam_mulai">Jam Mulai</label>
@@ -94,71 +92,63 @@
 								</div>
 							</div>
 
-							<div class="row">
-								<div class="form-group">
-									<label for="disposisi">Disposisi</label>
-									<select name="disposisi" id="input-disposisi" class="form-control select-single">
-										<option value="" selected disabled>Pilih Disposisi</option>
-										@foreach ($users as $user)
-											<option 
-											{{ $user->id == $agenda->disposisi ? 'selected' : '' }}
-											value="{{ $user->id }}">{{ $user->name .' - '. ($user->roles()->count() ? $user->getRoleNames()[0] : '') }}</option>
-										@endforeach
-									</select>
-									<x-validation-error id="error-disposisi"/>
-								</div>
+							<div class="form-group">
+								<label for="disposisi">Disposisi</label>
+								<select name="disposisi" id="input-disposisi" class="form-control select-single">
+									<option value="" selected disabled>Pilih Disposisi</option>
+									@foreach ($users as $user)
+										<option 
+										{{ $user->id == $agenda->disposisi ? 'selected' : '' }}
+										value="{{ $user->id }}">{{ $user->name .' - '. ($user->roles()->count() ? $user->getRoleNames()[0] : '') }}</option>
+									@endforeach
+								</select>
+								<x-validation-error id="error-disposisi"/>
 							</div>
-							<div class="row">
-								<div class="form-group">
-									<label for="kegiatan">Kegiatan</label>
-									<input type="text" name="kegiatan" id="input-kegiatan" class="form-control"
-									value="{{ old('kegiatan') ?? $agenda->kegiatan }}">
-									<x-validation-error id="error-kegiatan"/>
-								</div>
+							<div class="form-group">
+								<label for="kegiatan">Kegiatan</label>
+								<input type="text" name="kegiatan" id="input-kegiatan" class="form-control"
+								value="{{ old('kegiatan') ?? $agenda->kegiatan }}">
+								<x-validation-error id="error-kegiatan"/>
 							</div>
-							<div class="row">
-								<div class="form-group">
-									<label for="tempat">Tempat</label>
-									<input type="text" name="tempat" id="input-tempat" class="form-control"
-									value="{{ old('tempat') ?? $agenda->tempat }}">
-									<x-validation-error id="error-tempat"/>
-								</div>
+							<div class="form-group">
+								<label for="tempat">Tempat</label>
+								<input type="text" name="tempat" id="input-tempat" class="form-control"
+								value="{{ old('tempat') ?? $agenda->tempat }}">
+								<x-validation-error id="error-tempat"/>
 							</div>
-							<div class="row">
-								<div class="form-group">
-									<label for="pelaksana">Pelaksana Kegiatan</label>
-									<input type="text" name="pelaksana" id="input-pelaksana" class="form-control"
-									value="{{ old('pelaksana') ?? $agenda->pelaksana_kegiatan }}">
-									<x-validation-error id="error-pelaksana"/>
-								</div>
+							<div class="form-group">
+								<label for="pelaksana">Pelaksana Kegiatan</label>
+								<input type="text" name="pelaksana" id="input-pelaksana" class="form-control"
+								value="{{ old('pelaksana') ?? $agenda->pelaksana_kegiatan }}">
+								<x-validation-error id="error-pelaksana"/>
 							</div>
 
 						</div>
 						<div class="col-md-6">
 							
 							<div class="row">
-								<div class="col-md-3">
+								<div class="col-md-6">
 									<label class="d-block" for="undangan">Undangan</label>
 									<input name="undangan" class="undangan" onchange="showPreviewImage(this)" type="file" id="undangan-btn" hidden/>
 									<label class="d-block text-center btn btn-outline-primary btn-sm btn-block" for="undangan-btn"><i class="fas fa-upload"></i>&nbsp;  Pilih File</label>
 									<img id="img-undangan" src="" alt="" style="display: none; width: 100px; height: 100px; object-fit: cover; object-position: center">
 									<x-validation-error id="error-undangan"/>
 								</div>
-								<div class="col-md-3">
+								<div class="col-md-6">
 									<label class="d-block" for="materi">Materi</label>
 									<input name="materi" class="materi" onchange="showPreviewImage(this)" type="file" id="materi-btn" hidden/>
 									<label class="d-block text-center btn btn-outline-primary btn-sm btn-block" for="materi-btn"><i class="fas fa-upload"></i>&nbsp;  Pilih File</label>
 									<img id="img-materi" src="" alt="" style="display: none; width: 100px; height: 100px; object-fit: cover; object-position: center">
 									<x-validation-error id="error-materi"/>
 								</div>
-								<div class="col-md-3">
+								<div class="col-md-6">
 									<label class="d-block" for="absen">Daftar Hadir</label>
 									<input name="absen" class="absen" onchange="showPreviewImage(this)" type="file" id="absen-btn" hidden/>
 									<label class="d-block text-center btn btn-outline-primary btn-sm btn-block" for="absen-btn"><i class="fas fa-upload"></i>&nbsp;  Pilih File</label>
 									<img id="img-absen" src="" alt="" style="display: none; width: 100px; height: 100px; object-fit: cover; object-position: center">
 									<x-validation-error id="error-absen"/>
 								</div>
-								<div class="col-md-3">
+								<div class="col-md-6">
 									<label class="d-block" for="notulen">Notulen</label>
 									<input name="notulen" class="notulen" onchange="showPreviewImage(this)" type="file" id="notulen-btn" hidden/>
 									<label class="d-block text-center btn btn-outline-primary btn-sm btn-block" for="notulen-btn"><i class="fas fa-upload"></i>&nbsp;  Pilih File</label>
