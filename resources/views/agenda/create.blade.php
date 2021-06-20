@@ -95,9 +95,7 @@
 								<select name="disposisi" id="input-disposisi" class="form-control select-single">
 									<option value="" selected disabled>Pilih Disposisi</option>
 									@foreach ($users as $user)
-										<option 
-										
-										value="{{ $user->id }}">{{ $user->name .' - '. ($user->roles()->count() ? $user->getRoleNames()[0] : '') }}</option>
+										<option value="{{ $user->id }}">{{ $user->name .' - '. ($user->roles()->count() ? $user->getRoleNames()[0] : '') }}</option>
 									@endforeach
 								</select>
 								<x-validation-error id="error-disposisi"/>

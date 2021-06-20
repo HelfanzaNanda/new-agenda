@@ -28,6 +28,7 @@ class DashboardController extends Controller
 		}
 		return view('dashboard.index', [
 			'results' => $results,
+			'now' => $now->translatedFormat('d F Y')
 		]);
 	}
 
@@ -90,7 +91,7 @@ class DashboardController extends Controller
 		})
 		
 		->addColumn('status', function($row){
-			return $row->absens()->count() ? '<i class="fas fa-notification></i>' : '-';
+			return $row->daftar_hadirs()->count() ? '<i class="fas fa-notification></i>' : '-';
 		})
 		->addColumn('jam', function($row){
 			return Carbon::parse($row->jam_mulai)->format('H:i') . ' - ' . $row->jam_selesai ?? 'Selesai';

@@ -55,7 +55,7 @@ class AgendaController extends Controller
 			return Carbon::parse($row->jam_mulai)->format('H:i') . ' - ' . ($row->jam_selesai ?? 'Selesai');
 		})
 		->addColumn('hadir', function($row){
-			return $row->absens()->count() ? 'Hadir' : 'Diwakili';
+			return $row->daftar_hadirs()->count() ? 'Hadir' : 'Diwakili';
 		})
 		->rawColumns(['h/t']);
 		

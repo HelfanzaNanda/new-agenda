@@ -52,6 +52,13 @@
 						Agenda
 					</a>
 				</li>
+				<li class="app-sidebar__heading">Disposisi</li>
+				<li>
+					<a href="{{ route('disposisi.index') }}" class="{{ request()->is('disposisi') ? 'mm-active' : '' }}">
+						<i class="metismenu-icon fas fa-user"></i>
+						Disposisi
+					</a>
+				</li>
 				<li class="app-sidebar__heading">Report</li>
 				<li>
 					<a href="{{ route('report.agenda.index') }}" class="{{ request()->is('report/agenda') ? 'mm-active' : '' }}">

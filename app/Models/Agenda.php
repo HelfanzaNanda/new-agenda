@@ -23,8 +23,8 @@ class Agenda extends Model
 		return $this->belongsTo(User::class, 'disposisi', 'id');
 	}
 
-	public function absens()
+	public function daftar_hadirs()
 	{
-		return $this->hasMany(Absen::class, 'status');
+		return $this->hasMany(DaftarHadir::class, 'status');
 	}
 }

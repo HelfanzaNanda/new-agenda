@@ -50,9 +50,26 @@ Route::middleware('auth')->group(function(){
 		});
 	});
 
+	Route::prefix('disposisi')->group(function(){
+		Route::get('', 'Disposisi\DisposisiController@index')->name('disposisi.index');
+		Route::post('/datatables', 'Disposisi\DisposisiController@datatables')->name('disposisi.datatables');
+		Route::get('create/{agenda_id?}', 'Disposisi\DisposisiController@create')->name('disposisi.create');
+		Route::post('store', 'Disposisi\DisposisiController@store')->name('disposisi.store');
+		Route::get('edit/{id}', 'Disposisi\DisposisiController@edit')->name('disposisi.edit');
+		Route::post('edit/{id}', 'Disposisi\DisposisiController@update');
+		Route::get('detail/{id}', 'Disposisi\DisposisiController@detail')->name('disposisi.detail');
+		Route::delete('delete/{id}', 'Disposisi\DisposisiController@delete')->name('disposisi.delete');
+		Route::get('download', 'Disposisi\DisposisiController@download')->name('disposisi.download');
+		Route::get('generate', 'Disposisi\DisposisiController@generateNumber')->name('disposisi.generate.number');
+		
+		Route::get('{id}', 'User\UserController@get')->name('disposisi.get');
+	});
 
 	
 });
+
+Route::get('number/generate', 'NumberGenerate\NumberGenerateController@generate')->name('number.generate');
+Route::get('number/validate', 'NumberGenerate\NumberGenerateController@validateNumber')->name('number.validate');
 
 
 Auth::routes();

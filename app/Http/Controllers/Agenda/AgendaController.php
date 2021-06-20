@@ -145,7 +145,7 @@ class AgendaController extends Controller
 			return $row->user->name;
 		})
 		->addColumn('status', function($row){
-			return $row->absens()->count() ? '<i class="fas fa-notification></i>' : '-';
+			return $row->daftar_hadirs()->count() ? '<i class="fas fa-notification></i>' : '-';
 		})
 		->addColumn('jam', function($row){
 			return Carbon::parse($row->jam_mulai)->format('H:i') . ' - ' . ($row->jam_selesai ?? 'Selesai');
@@ -196,6 +196,9 @@ class AgendaController extends Controller
         ->addColumn('_buttons', function($row){
 			$btn = '';
 			$btn .= '<div class="btn-group" role="group">';
+			if($row->user->getRoleNames()[0] == auth()->user()->getRoleNames()[0]){
+				$btn .= '	<a href="'.route('disposisi.create', $row->id).'" class="btn btn-sm btn-primary text-white"><i class="fas fa-plus"></i> Disposisi</a>';
+			}
 			$btn .= '	<a data-id="'.$row->id.'"  class="btn-detail btn btn-sm btn-primary text-white"><i class="fas fa-eye"></i></a>';
             $btn .= '	<a  href="'.route('agenda.edit', $row->id).'" class="btn-edit btn btn-sm btn-warning text-white"><i class="fa fa-edit"></i></a>';
             $btn .= '	<a data-id="'.$row->id.'" class="btn-delete btn btn-sm text-white btn-danger"><i class="fa fa-trash"></i></a>';
