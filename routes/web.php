@@ -16,6 +16,7 @@ Route::middleware('auth')->group(function(){
 	Route::post('update-password', 'User\UpdatePasswordController@update');
 
 	Route::get('/', 'Dashboard\DashboardController@index')->name('dashboard.index');
+	Route::get('/full-screen', 'Dashboard\DashboardController@fullScreen')->name('dashboard.full.screen');
 	Route::post('/', 'Dashboard\DashboardController@datatables')->name('dashboard.datatables');
 
 	Route::prefix('users')->group(function(){

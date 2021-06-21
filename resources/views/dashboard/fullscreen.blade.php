@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.base')
 
-@section('content')
+@section('body')
 <style>
 	.img-dashboard {
 		/* background-image: url('/images/bg.jpg'); */
@@ -21,11 +21,6 @@
 		color: white;
 	}
 </style>
-<div class="d-flex justify-content-end mb-2">
-	<div class="bg-primary mr-2 text-white py-1 px-2 rounded">{{ $now }}</div>
-	<a href="{{ route('dashboard.full.screen') }}" target="_blank" id="full-screen" class="btn btn-outline-primary mr-2 py-1 px-2 rounded"><i class="fas fa-expand"></i> Full Screen</a>
-	<div id="exit-full-screen" style="display: none" class="btn btn-outline-primary mr-2 py-1 px-2 rounded"><i class="fas fa-compress"></i> Exit Full Screen</div>
-</div>
 
 <div class="row" style="margin-top: 0">
 	<div class="col-md-12">
@@ -215,52 +210,5 @@
 			$('#datatable').DataTable().ajax.reload()
 		}, 50);
 	})
-
-	function requestFullScreen(element) {
-    // Supports most browsers and their versions.
-		var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
-
-		if (requestMethod) { // Native full screen.
-			requestMethod.call(element);
-		} else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
-			var wscript = new ActiveXObject("WScript.Shell");
-			if (wscript !== null) {
-				wscript.SendKeys("{F11}");
-			}
-		}
-	}
-
-	// $(document).on('click', '#full-screen', function (e) {  
-	// 	e.preventDefault()
-	// 	$(this).css('display', 'none')
-	// 	$('#exit-full-screen').css('display', '')
-	// 	//window.open('/', 'fullscreen="yes"')
-	// 	var elem = document.body;
-	// 	requestFullScreen(elem);
-	// 	toogleSidebar()
-	// })
-
-	$(document).on('click', '#exit-full-screen', function (e) {
-		
-		$(this).css('display', 'none')
-		$('#full-screen').css('display', '')
-		if (document.exitFullscreen) {
-			document.exitFullscreen();
-		} else if (document.webkitExitFullscreen) { /* Safari */
-			document.webkitExitFullscreen();
-		} else if (document.msExitFullscreen) { /* IE11 */
-			document.msExitFullscreen();
-		}
-		//toogleSidebar()
-	})
-
-	function toogleSidebar() {  
-		setTimeout(() => {
-			let data = $('.close-sidebar-btn').data('class')
-			$(".app-container").toggleClass(data);
-			let c = $('.close-sidebar-btn')
-			c.hasClass("is-active") ? c.removeClass("is-active") : c.addClass("is-active")	
-		}, 100);
-	}
 </script>
 @endpush

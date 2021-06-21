@@ -28,7 +28,26 @@ class DashboardController extends Controller
 		}
 		return view('dashboard.index', [
 			'results' => $results,
-			'now' => $now->translatedFormat('d F Y')
+			'now' => Carbon::now()->translatedFormat('d F Y')
+		]);
+	}
+
+	public function fullScreen()
+	{
+		$now = Carbon::now();
+		$period = CarbonPeriod::create($now->translatedFormat('Y-m-d'), $now->addDays(6)->translatedFormat('Y-m-d'));
+		$results = [];
+		foreach($period as $date){
+			$count = Agenda::whereDate('tanggal_mulai', $date->format('Y-m-d'))->count();
+			$item = [
+				'count' => $count,
+				'date' => $date->translatedFormat('d F Y')
+			];
+			array_push($results, $item);
+		}
+		return view('dashboard.fullscreen', [
+			'results' => $results,
+			'now' => Carbon::now()->translatedFormat('d F Y')
 		]);
 	}
 
