@@ -31,36 +31,32 @@
 	</div>    <div class="scrollbar-sidebar">
 		<div class="app-sidebar__inner">
 			<ul class="vertical-nav-menu">
-				<li class="app-sidebar__heading">Dashboard</li>
-				<li>
+				<li class="app-sidebar__heading">MENU</li>
+				<li class="mb-2">
 					<a href="{{ route('dashboard.index') }}" class="{{ request()->is('/') ? 'mm-active' : '' }}">
 						<i class="metismenu-icon fas fa-home"></i>
 						Dashboard
 					</a>
 				</li>
-				<li class="app-sidebar__heading">Users</li>
-				<li>
+				<li class="mb-2">
 					<a href="{{ route('user.index') }}" class="{{ request()->is('users') ? 'mm-active' : '' }}">
 						<i class="metismenu-icon fas fa-users"></i>
 						Users
 					</a>
 				</li>
-				<li class="app-sidebar__heading">Agenda</li>
-				<li>
+				<li class="mb-2">
 					<a href="{{ route('agenda.index') }}" class="{{ request()->is('agenda') ? 'mm-active' : '' }}">
 						<i class="metismenu-icon fas fa-calendar"></i>
 						Agenda
 					</a>
 				</li>
-				<li class="app-sidebar__heading">Disposisi</li>
-				<li>
+				<li class="mb-2">
 					<a href="{{ route('disposisi.index') }}" class="{{ request()->is('disposisi') ? 'mm-active' : '' }}">
 						<i class="metismenu-icon fas fa-user"></i>
 						Disposisi
 					</a>
 				</li>
-				<li class="app-sidebar__heading">Report</li>
-				<li>
+				<li class="mb-2">
 					<a href="{{ route('report.agenda.index') }}" class="{{ request()->is('report/agenda') ? 'mm-active' : '' }}">
 						<i class="metismenu-icon fas fa-file"></i>
 						Report
