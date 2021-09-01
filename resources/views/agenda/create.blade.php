@@ -102,7 +102,8 @@
 							</div>
 							<div class="form-group">
 								<label for="kegiatan">Kegiatan</label>
-								<input type="text" name="kegiatan" id="input-kegiatan" class="form-control">
+								<textarea name="kegiatan" id="input-kegiatan" class="form-control" style="height: 146px;"></textarea>
+								{{-- <input type="text" name="kegiatan" id="input-kegiatan" class="form-control"> --}}
 								<x-validation-error id="error-kegiatan"/>
 							</div>
 							<div class="form-group">
@@ -226,7 +227,7 @@
 				locale: {
 					format: 'DD MMMM YYYY'
 				},
-				minDate: new Date()
+				//minDate: new Date()
 			}, function(start, end, label) {
 					$('#input-tanggal_selesai').val(end.format('DD-MM-YYYY'))
 					$('#input-tanggal_mulai').val(start.format('DD-MM-YYYY'))
